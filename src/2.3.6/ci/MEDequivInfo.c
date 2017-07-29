@@ -24,7 +24,7 @@
 #include <stdlib.h>
 
 int
-MEDequivInfo(med_idt fid, char *maa, int ind, char *eq, char *des)
+MEDequivInfo(int fid, char *maa, int ind, char *eq, char *des)
 {
   med_idt eqid;
   med_err ret;
