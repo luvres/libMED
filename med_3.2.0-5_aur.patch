@@ -1,0 +1,151 @@
+diff -uprN med-3.2.0.orig/include/2.3.6/med.h.in med-3.2.0.modif/include/2.3.6/med.h.in
+--- med-3.2.0.orig/include/2.3.6/med.h.in	2016-01-14 13:55:27.000000000 -0200
++++ med-3.2.0.modif/include/2.3.6/med.h.in	2017-07-29 14:29:47.420277294 -0300
+@@ -25,11 +25,7 @@ extern "C" {
+ #endif
+ 
+ #define HDF5_VERSION (H5_VERS_MAJOR * 10000 + H5_VERS_MINOR * 100  + H5_VERS_RELEASE )
+-#if HDF5_VERSION < 10607
+-#define HDF5_SELECT_BUG (const hsize_t **)
+-#else
+ #define HDF5_SELECT_BUG
+-#endif
+ 
+ 
+ #define MED_NUM_MAJEUR 2 
+diff -uprN med-3.2.0.orig/include/med.h.in med-3.2.0.modif/include/med.h.in
+--- med-3.2.0.orig/include/med.h.in	2016-01-21 14:04:23.000000000 -0200
++++ med-3.2.0.modif/include/med.h.in	2017-07-29 14:29:47.436943962 -0300
+@@ -27,12 +27,7 @@ extern "C" {
+ 
+ #define HDF5_VERSION (H5_VERS_MAJOR * 10000 + H5_VERS_MINOR * 100  + H5_VERS_RELEASE )
+ 
+-#if HDF5_VERSION < 10607
+-/*TODO : A enlever après MAJ complète api hdf5-1.8 */
+-#define HDF5_SELECT_BUG (const hsize_t **)
+-#else
+ #define HDF5_SELECT_BUG
+-#endif
+ 
+ /*Le symbole H5F_LIBVER_18 n'existe pas dans hdf5-1.8.4 (uniquement à partir de la version 1.8.6)
+   Pour rester dans le modèle interne hdf introduit en 1.8 quelque soit les futurs modèles internes hdf
+diff -uprN med-3.2.0.orig/src/2.3.6/ci/MEDequivInfo.c med-3.2.0.modif/src/2.3.6/ci/MEDequivInfo.c
+--- med-3.2.0.orig/src/2.3.6/ci/MEDequivInfo.c	2016-01-14 13:55:30.000000000 -0200
++++ med-3.2.0.modif/src/2.3.6/ci/MEDequivInfo.c	2017-07-29 14:29:47.453610629 -0300
+@@ -24,7 +24,7 @@
+ #include <stdlib.h>
+ 
+ int
+-MEDequivInfo(int fid, char *maa, int ind, char *eq, char *des)
++MEDequivInfo(med_idt fid, char *maa, int ind, char *eq, char *des)
+ {
+   med_idt eqid;
+   med_err ret;
+diff -uprN med-3.2.0.orig/src/2.3.6/hdfi/MEDattrNumEcrire.c med-3.2.0.modif/src/2.3.6/hdfi/MEDattrNumEcrire.c
+--- med-3.2.0.orig/src/2.3.6/hdfi/MEDattrNumEcrire.c	2016-01-14 13:55:29.000000000 -0200
++++ med-3.2.0.modif/src/2.3.6/hdfi/MEDattrNumEcrire.c	2017-07-29 14:29:49.426944035 -0300
+@@ -36,7 +36,7 @@ med_err _MEDattrNumEcrire(med_idt pere,m
+ {
+   med_idt aid,attr;
+   med_err ret;
+-  int type_hdf;
++  long   type_hdf;
+   med_mode_acces MED_MODE_ACCES;
+ 
+   if ( (MED_MODE_ACCES = _MEDmodeAcces(pere) ) == MED_UNDEF_MODE_ACCES ) {
+diff -uprN med-3.2.0.orig/src/hdfi/_MEDattributeNumRdByName.c med-3.2.0.modif/src/hdfi/_MEDattributeNumRdByName.c
+--- med-3.2.0.orig/src/hdfi/_MEDattributeNumRdByName.c	2016-01-14 13:55:27.000000000 -0200
++++ med-3.2.0.modif/src/hdfi/_MEDattributeNumRdByName.c	2017-07-29 14:29:49.426944035 -0300
+@@ -27,7 +27,7 @@ med_err _MEDattributeNumRdByName(med_idt
+ {
+   med_idt _attid=0;
+   med_err _ret=-1;
+-  int type_hdf;
++  long   type_hdf;
+ 
+   switch(type)
+     {
+diff -uprN med-3.2.0.orig/src/hdfi/_MEDattributeNumWr.c med-3.2.0.modif/src/hdfi/_MEDattributeNumWr.c
+--- med-3.2.0.orig/src/hdfi/_MEDattributeNumWr.c	2016-01-14 13:55:27.000000000 -0200
++++ med-3.2.0.modif/src/hdfi/_MEDattributeNumWr.c	2017-07-29 14:29:49.426944035 -0300
+@@ -32,7 +32,7 @@ med_err _MEDattributeNumWr(med_idt pid,
+ {
+   med_idt _attid=0,aid=0;
+   med_err _ret=-1;
+-  int     type_hdf;
++  long     type_hdf;
+   med_access_mode MED_ACCESS_MODE;
+   H5O_info_t      _oinfo;
+ 
+diff -uprN med-3.2.0.orig/src/hdfi/_MEDattributeNumWrByName.c med-3.2.0.modif/src/hdfi/_MEDattributeNumWrByName.c
+--- med-3.2.0.orig/src/hdfi/_MEDattributeNumWrByName.c	2016-01-14 13:55:28.000000000 -0200
++++ med-3.2.0.modif/src/hdfi/_MEDattributeNumWrByName.c	2017-07-29 14:29:49.426944035 -0300
+@@ -32,7 +32,7 @@ med_err _MEDattributeNumWrByName(med_idt
+ {
+   med_idt _attid=0,aid=0;
+   med_err _ret=-1;
+-  int     type_hdf;
++  long   type_hdf;
+   med_access_mode MED_ACCESS_MODE;
+   H5O_info_t      _oinfo;
+ 
+diff -uprN med-3.2.0.orig/src/hdfi/_MEDattributeStringRdByName.c med-3.2.0.modif/src/hdfi/_MEDattributeStringRdByName.c
+--- med-3.2.0.orig/src/hdfi/_MEDattributeStringRdByName.c	2016-01-14 13:55:28.000000000 -0200
++++ med-3.2.0.modif/src/hdfi/_MEDattributeStringRdByName.c	2017-07-29 14:29:49.430277370 -0300
+@@ -29,7 +29,7 @@ med_err _MEDattributeStringRdByName(med_
+ {
+   med_err _ret=-1;
+   med_idt _attid=0;
+-  int     type_hdf=0;
++  long   type_hdf=0;
+ 
+   if ( (type_hdf = H5Tcopy(H5T_C_S1)) < 0) {
+     MED_ERR_(_ret,MED_ERR_CREATE,MED_ERR_HDFTYPE, MED_ERR_NAME_MSG );
+diff -uprN med-3.2.0.orig/src/hdfi/_MEDattributeStringWr.c med-3.2.0.modif/src/hdfi/_MEDattributeStringWr.c
+--- med-3.2.0.orig/src/hdfi/_MEDattributeStringWr.c	2016-01-14 13:55:27.000000000 -0200
++++ med-3.2.0.modif/src/hdfi/_MEDattributeStringWr.c	2017-07-29 14:29:49.430277370 -0300
+@@ -30,7 +30,7 @@ med_err _MEDattributeStringWr(med_idt pi
+   med_access_mode MED_ACCESS_MODE;
+   med_idt _attid=0,aid=0;
+   med_err _ret=-1;
+-  int     type_hdf=0;
++  long    type_hdf=0;
+   med_bool        _attmustbecreated= MED_FALSE;
+   hsize_t         _attsize=0;
+   med_size        _valsize=0;
+diff -uprN med-3.2.0.orig/src/hdfi/_MEDattributeStringWrByName.c med-3.2.0.modif/src/hdfi/_MEDattributeStringWrByName.c
+--- med-3.2.0.orig/src/hdfi/_MEDattributeStringWrByName.c	2016-01-14 13:55:28.000000000 -0200
++++ med-3.2.0.modif/src/hdfi/_MEDattributeStringWrByName.c	2017-07-29 14:29:49.430277370 -0300
+@@ -31,7 +31,7 @@ med_err _MEDattributeStringWrByName(med_
+   med_access_mode MED_ACCESS_MODE;
+   med_idt _attid=0,aid=0;
+   med_err _ret=-1;
+-  int     type_hdf=0;
++  long   type_hdf=0;
+   med_bool        _attmustbecreated= MED_FALSE;
+   hsize_t         _attsize=0;
+   med_size        _valsize=0;
+diff -uprN med-3.2.0.orig/src/hdfi/_MEDdatasetRd.c med-3.2.0.modif/src/hdfi/_MEDdatasetRd.c
+--- med-3.2.0.orig/src/hdfi/_MEDdatasetRd.c	2016-01-14 13:55:28.000000000 -0200
++++ med-3.2.0.modif/src/hdfi/_MEDdatasetRd.c	2017-07-29 14:29:49.430277370 -0300
+@@ -32,7 +32,7 @@ med_err _MEDdatasetRd(const med_idt
+   med_idt         _dataset=0, _dataspace=0;
+   med_size        _datasetsize[1]={0};
+   med_err         _ret=-1;
+-  int             _hdftype=0;
++  long            _hdftype=0;
+   int             _datasetsizeEqualTosizespace = 0;
+   med_access_mode _MED_ACCESS_MODE;
+   med_int         _nvaluesperentity=0,_nconstituentpervalue=0;
+diff -uprN med-3.2.0.orig/src/hdfi/_MEDdatasetWr.c med-3.2.0.modif/src/hdfi/_MEDdatasetWr.c
+--- med-3.2.0.orig/src/hdfi/_MEDdatasetWr.c	2016-01-14 13:55:27.000000000 -0200
++++ med-3.2.0.modif/src/hdfi/_MEDdatasetWr.c	2017-07-29 14:29:49.430277370 -0300
+@@ -30,7 +30,7 @@ med_err _MEDdatasetWr(const med_idt
+   med_idt         _dataset=0, _dataspace=0,_datadiskspace=0;
+   med_size        _datasetsize[1]={0};
+   med_err         _ret=-1;
+-  int             _hdftype=0;
++  long            _hdftype=0;
+   int             _datasetsizeEqualTosizespace = 0;
+   med_access_mode _MED_ACCESS_MODE;
+   med_int         _nvaluesperentity=0,_nconstituentpervalue=0;
