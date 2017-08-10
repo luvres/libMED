@@ -19,12 +19,11 @@ curl -L https://raw.githubusercontent.com/luvres/libMED/master/patch-int2long | 
 curl -L https://raw.githubusercontent.com/luvres/libMED/master/patch-src_2.3.6_ci_MEDequivInfo.c | patch -p0
 ```
 
-##### Or FUll Patch
+##### Or Full Patch (All in one)
 ```
 patch -p1 < full.patch
 
 OR
 
-patch -p1 < patch-include_2.3.6_med.h.in
-
+curl -L https://raw.githubusercontent.com/luvres/libMED/master/full.patch | patch -p1
 ```
